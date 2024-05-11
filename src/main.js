@@ -1,35 +1,53 @@
 import { searchImages } from './js/pixabay-api';
+import { createMarcup } from './js/render-functions';
+
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-import { createMarcup } from './js/render-functions';
-import simpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
 
 const searchForm = document.querySelector('#search-form');
 const galleryList = document.querySelector('#gallery');
+const loaderEl = document.querySelector('.loader');
 
 searchForm.addEventListener('submit', event => {
   event.preventDefault();
-  const value = event.target.elements.searchInput.value.trim();
 
-  if (!value) {
+  const valueSearch = event.target.elements.searchInput.value.trim();
+
+  if (!valueSearch) {
+    iziToast.error({
+      message: 'Please enter text to find something!',
+      position: 'topRight',
+    });
     return;
   }
-  galleryList.innerHTML = '';
-  searchImages(value)
-    .then(data => {
-      if (!data.hits.length) {
-        throw new Error(
-          'Sorry, there are no images matching your search query. Please try again!'
-        );
+
+  loaderEl.classList.remove('is-hidden');
+
+  searchImages(valueSearch)
+    .then(images => {
+      if (!images.hits.length) {
+        iziToast.error({
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
+          position: 'topRight',
+        });
       }
-      createMarcup(data.hits);
+      searchForm.searchInput.value = '';
+      galleryList.innerHTML = '';
+      createMarcup(images.hits, galleryList);
+      loaderEl.style.display = 'none';
     })
     .catch(error => {
+      console.error('Error fetching images:', error);
       iziToast.error({
         title: 'Error',
-        message: error.message,
+        message:
+          'An error occurred while fetching images. Please try again later.',
+        position: 'topRight',
+        messageColor: '#ffffff',
+        timeout: 3000,
+        backgroundColor: '#ef4040',
       });
+      loaderEl.classList.add('is-hidden');
     });
 });

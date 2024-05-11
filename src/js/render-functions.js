@@ -1,30 +1,36 @@
-const galleryList = document.querySelector('#gallery');
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export function createMarcup(data) {
-  const marcup = data
-    .map(element => {
-      const {
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      } = element;
-      return ` <li>
-        <a href="">
-    <img src="${webformatURL}" alt="${tags}">
-          <ul>
-            <li>Likes ${likes}</li>
-            <li>Views ${views}</li>
-            <li>Coments ${comments}</li>
-            <li>Download ${downloads}</li>
+const gallery = new SimpleLightbox('.gallery-link');
+
+export const createMarcup = (list, tag) => {
+  const marcup = list
+    .map(image => {
+      return ` <li class="gallery-item">
+        <a class="gallery-link" href="${image.largeImageURL}" data-lightbox="gallery">
+    <img class="gallery-image" src="${image.webformatURL}" alt="${image.tags}">
+          <ul class="stats-block">
+            <li>
+              <span>Likes</span>
+              <span>${image.likes}</span> 
+            </li>
+            <li>
+              <span>Views</span>
+              <span>${image.views}</span>
+            </li>
+            <li>
+              <span>Coments</span>
+              <span>${image.comments}</span>
+            </li>
+            <li>
+              <span>Download</span>
+              <span>${image.downloads}</span>
+            </li>
           </ul>
         </a>
       </li>`;
     })
     .join('');
-  galleryList.insertAdjacentHTML('beforeend', marcup);
-  console.log(data);
-}
+  tag.insertAdjacentHTML('beforeend', marcup);
+  gallery.refresh();
+};
