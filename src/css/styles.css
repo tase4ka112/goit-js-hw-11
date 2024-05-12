@@ -158,6 +158,19 @@ body {
   position: relative;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
+
+  .gallery & {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
 
 .loader::after,

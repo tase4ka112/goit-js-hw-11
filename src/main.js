@@ -35,7 +35,7 @@ searchForm.addEventListener('submit', event => {
       searchForm.searchInput.value = '';
       galleryList.innerHTML = '';
       createMarcup(images.hits, galleryList);
-      loaderEl.style.display = 'none';
+      loaderEl.classList.add('is-hidden');
     })
     .catch(error => {
       console.error('Error fetching images:', error);
