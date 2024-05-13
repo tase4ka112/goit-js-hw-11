@@ -14,22 +14,28 @@ searchForm.addEventListener('submit', event => {
   const valueSearch = event.target.elements.searchInput.value.trim();
 
   if (!valueSearch) {
-    iziToast.error({
+    galleryList.innerHTML = '';
+    iziToast.show({
       message: 'Please enter text to find something!',
       position: 'topRight',
+      timeout: 2000,
+      color: 'red',
     });
     return;
   }
 
+  galleryList.innerHTML = '';
   loaderEl.classList.remove('is-hidden');
 
   searchImages(valueSearch)
     .then(images => {
       if (!images.hits.length) {
-        iziToast.error({
+        iziToast.show({
           message:
             'Sorry, there are no images matching your search query. Please try again!',
           position: 'topRight',
+          timeout: 2000,
+          color: 'red',
         });
       }
       searchForm.searchInput.value = '';
@@ -38,7 +44,6 @@ searchForm.addEventListener('submit', event => {
       loaderEl.classList.add('is-hidden');
     })
     .catch(error => {
-      console.error('Error fetching images:', error);
       iziToast.error({
         title: 'Error',
         message:
